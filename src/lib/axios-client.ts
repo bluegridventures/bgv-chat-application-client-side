@@ -12,6 +12,16 @@ export const API = axios.create({
 
 // Dev-only header-based auth support per tab (sessionStorage)
 API.interceptors.request.use((config) => {
+  // Attach prod token if present
+  try {
+    const accessToken = localStorage.getItem("ACCESS_TOKEN");
+    if (accessToken && typeof accessToken === "string" && accessToken.length > 0) {
+      config.headers = config.headers ?? {};
+      (config.headers as any)["Authorization"] = `Bearer ${accessToken}`;
+    }
+  } catch {}
+
+  // In development, also allow per-tab dev token from sessionStorage
   if (import.meta.env.MODE === "development") {
     try {
       const token = sessionStorage.getItem("DEV_ACCESS_TOKEN");

@@ -26,12 +26,14 @@ export const useSocket = create<SocketState>()((set, get) => ({
     let nextToken: string | null = null;
     if (import.meta.env.MODE === "development") {
       try { nextToken = sessionStorage.getItem("DEV_ACCESS_TOKEN"); } catch {}
+    } else {
+      try { nextToken = localStorage.getItem("ACCESS_TOKEN"); } catch {}
     }
 
     // Reuse existing socket only if dev token matches (or not in dev)
     const existingToken = (socket as any)?.auth?.token as string | undefined;
     const canReuse = !!socket && socket.connected && (
-      import.meta.env.MODE !== "development" || existingToken === nextToken || (!existingToken && !nextToken)
+      existingToken === nextToken || (!existingToken && !nextToken)
     );
     if (canReuse) return;
 
