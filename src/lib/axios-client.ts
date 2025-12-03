@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const useProxy = import.meta.env.VITE_USE_PROXY === "1";
+const isProd = import.meta.env.MODE === "production";
 
 export const API = axios.create({
-  baseURL: useProxy ? "/api" : `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: isProd
+    ? `${import.meta.env.VITE_API_URL}/api`
+    : (useProxy ? "/api" : `${import.meta.env.VITE_API_URL}/api`),
   withCredentials: true,
 });
 

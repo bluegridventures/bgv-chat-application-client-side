@@ -2,7 +2,11 @@ import { io, Socket } from "socket.io-client";
 import { create } from "zustand";
 
 const useProxy = (import.meta.env as any).VITE_USE_PROXY === "1";
-const BASE_URL = useProxy ? "" : (import.meta.env.VITE_API_URL || "/");
+const isProd = import.meta.env.MODE === "production";
+// In production, bypass Vercel rewrites and connect directly to backend
+const BASE_URL = isProd
+  ? (import.meta.env.VITE_API_URL || "")
+  : (useProxy ? "" : (import.meta.env.VITE_API_URL || ""));
 
 interface SocketState {
   socket: Socket | null;
