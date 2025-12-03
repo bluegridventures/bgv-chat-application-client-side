@@ -41,6 +41,7 @@ export const useSocket = create<SocketState>()((set, get) => ({
       withCredentials: true,
       autoConnect: true,
       path: "/api/socket.io",
+      transports: ["websocket"],
       auth,
     });
 
